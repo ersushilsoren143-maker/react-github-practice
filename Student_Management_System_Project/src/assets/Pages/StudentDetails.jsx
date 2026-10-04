@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Link, useParams } from "react-router-dom";
 
@@ -8,31 +9,29 @@ const StudentDetails = () => {
 
   const { students } = useStudentContext();
 
-  // Find student from Context
+  // Find student
   const student = students.find(
-    (item) => item.id === Number(id)
+    (item) => String(item.id) === id
   );
 
   // Student not found
   if (!student) {
     return (
-      <div
-        style={{
-          textAlign: "center",
-          padding: "80px 20px",
-        }}
-      >
-        <h2>Student Not Found</h2>
+      <div className="details-not-found">
+        <div className="details-not-found-card">
+          <div className="details-not-found-icon">🔍</div>
 
-        <p>
-          The student you are looking for does not exist.
-        </p>
+          <h2>Student Not Found</h2>
 
-        <Link to="/students">
-          <button className="primary-btn">
+          <p>
+            The student you are looking for does not exist
+            or may have been deleted.
+          </p>
+
+          <Link to="/students" className="primary-btn">
             ← Back to Students
-          </button>
-        </Link>
+          </Link>
+        </div>
       </div>
     );
   }
@@ -43,105 +42,97 @@ const StudentDetails = () => {
       <div className="page-header">
         <div>
           <h1>Student Details</h1>
-          <p>View student information</p>
+          <p>View complete student information</p>
         </div>
 
-        <Link to="/students">
-          <button className="secondary-btn">
-            ← Back to Students
-          </button>
+        <Link to="/students" className="secondary-btn">
+          ← Back to Students
         </Link>
       </div>
 
-      {/* Student Details */}
-      <div className="form-container">
+      {/* Student Profile */}
+      <div className="student-details-card">
 
-        {/* ID */}
-        <div className="form-group">
-          <label>Student ID</label>
+        {/* Profile Header */}
+        <div className="student-profile-header">
+          <div className="student-avatar">
+            {student.name?.charAt(0).toUpperCase()}
+          </div>
 
-          <input
-            type="text"
-            value={student.id}
-            readOnly
-          />
+          <div>
+            <h2>{student.name}</h2>
+            <p>{student.email}</p>
+          </div>
         </div>
 
-        {/* Name */}
-        <div className="form-group">
-          <label>Student Name</label>
+        {/* Student Information */}
+        <div className="student-info-grid">
 
-          <input
-            type="text"
-            value={student.name}
-            readOnly
-          />
-        </div>
+          <div className="student-info-item">
+            <span>Student ID</span>
+            <strong>{student.id}</strong>
+          </div>
 
-        {/* Email */}
-        <div className="form-group">
-          <label>Email</label>
+          <div className="student-info-item">
+            <span>Student Name</span>
+            <strong>{student.name}</strong>
+          </div>
 
-          <input
-            type="text"
-            value={student.email}
-            readOnly
-          />
-        </div>
+          <div className="student-info-item">
+            <span>Email</span>
+            <strong>{student.email}</strong>
+          </div>
 
-        {/* Course */}
-        <div className="form-group">
-          <label>Course</label>
+          <div className="student-info-item">
+            <span>Course</span>
+            <strong>{student.course}</strong>
+          </div>
 
-          <input
-            type="text"
-            value={student.course}
-            readOnly
-          />
-        </div>
+          <div className="student-info-item">
+            <span>Age</span>
+            <strong>{student.age} years</strong>
+          </div>
 
-        {/* Age */}
-        <div className="form-group">
-          <label>Age</label>
+          <div className="student-info-item">
+            <span>Status</span>
 
-          <input
-            type="text"
-            value={student.age}
-            readOnly
-          />
-        </div>
+            <strong>
+              <span
+                className={
+                  student.status === "Active"
+                    ? "status-badge active"
+                    : "status-badge inactive"
+                }
+              >
+                {student.status === "Active"
+                  ? "🟢 Active"
+                  : "🔴 Inactive"}
+              </span>
+            </strong>
+          </div>
 
-        {/* Status */}
-        <div className="form-group">
-          <label>Status</label>
-
-          <input
-            type="text"
-            value={student.status}
-            readOnly
-          />
         </div>
 
         {/* Actions */}
-        <div className="form-actions">
+        <div className="student-details-actions">
 
-          <Link to={`/students/edit/${student.id}`}>
-            <button className="edit-btn">
-              Edit Student
-            </button>
+          <Link
+            to={`/students/edit/${student.id}`}
+            className="edit-btn"
+          >
+            ✏️ Edit Student
           </Link>
 
-          <Link to="/students">
-            <button className="secondary-btn">
-              Back
-            </button>
+          <Link
+            to="/students"
+            className="secondary-btn"
+          >
+            ← Back
           </Link>
 
         </div>
-
       </div>
     </div>
   );
 };
-
-export default StudentDetails;
+export default StudentDetails

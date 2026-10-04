@@ -1,30 +1,55 @@
-
 import React from "react";
 import { Link } from "react-router-dom";
+
 import { useStudentContext } from "../context/StudentContext";
+
+import { getAttendance } from "../utils/attendanceStorage";
+import { getResults } from "../utils/resultStorage";
 
 const Dashboard = () => {
   const { students } = useStudentContext();
 
-  // Total students
+  const attendance = getAttendance();
+  const results = getResults();
+
+  // Student statistics
   const totalStudents = students.length;
 
-  // Active students
   const activeStudents = students.filter(
     (student) => student.status === "Active"
   ).length;
 
-  // Inactive students
   const inactiveStudents = students.filter(
     (student) => student.status === "Inactive"
   ).length;
 
-  // Total unique courses
   const totalCourses = new Set(
     students.map((student) => student.course)
   ).size;
 
-  // Latest 5 students
+  // Attendance statistics
+  const totalAttendance = attendance.length;
+
+  const presentCount = attendance.filter(
+    (record) => record.status === "Present"
+  ).length;
+
+  const absentCount = attendance.filter(
+    (record) => record.status === "Absent"
+  ).length;
+
+  // Result statistics
+  const totalResults = results.length;
+
+  const passedResults = results.filter(
+    (result) => result.grade !== "F"
+  ).length;
+
+  const failedResults = results.filter(
+    (result) => result.grade === "F"
+  ).length;
+
+  // Recent students
   const recentStudents = [...students]
     .sort((a, b) => Number(b.id) - Number(a.id))
     .slice(0, 5);
@@ -32,21 +57,31 @@ const Dashboard = () => {
   return (
     <div>
       {/* Dashboard Header */}
+
       <div className="dashboard-header">
         <div>
           <h1>Dashboard</h1>
-          <p>Welcome to Student Management System</p>
+
+          <p>
+            Welcome to Student Management System
+          </p>
         </div>
 
         <Link to="/students/add">
-          <button className="primary-btn">+ Add Student</button>
+          <button className="primary-btn">
+            + Add Student
+          </button>
         </Link>
       </div>
 
-      {/* Statistics Cards */}
+      {/* Student Statistics */}
+
+      <h2 className="dashboard-section-title">
+        Student Overview
+      </h2>
+
       <div className="dashboard-cards">
 
-        {/* Total Students */}
         <div className="dashboard-card">
           <div>
             <h3>Total Students</h3>
@@ -56,7 +91,6 @@ const Dashboard = () => {
           <span>👨‍🎓</span>
         </div>
 
-        {/* Active Students */}
         <div className="dashboard-card">
           <div>
             <h3>Active Students</h3>
@@ -66,7 +100,6 @@ const Dashboard = () => {
           <span>✅</span>
         </div>
 
-        {/* Inactive Students */}
         <div className="dashboard-card">
           <div>
             <h3>Inactive Students</h3>
@@ -76,7 +109,6 @@ const Dashboard = () => {
           <span>⏸️</span>
         </div>
 
-        {/* Total Courses */}
         <div className="dashboard-card">
           <div>
             <h3>Total Courses</h3>
@@ -88,19 +120,102 @@ const Dashboard = () => {
 
       </div>
 
+      {/* Attendance Statistics */}
+
+      <h2 className="dashboard-section-title">
+        Attendance Overview
+      </h2>
+
+      <div className="dashboard-cards">
+
+        <div className="dashboard-card">
+          <div>
+            <h3>Total Records</h3>
+            <h2>{totalAttendance}</h2>
+          </div>
+
+          <span>📊</span>
+        </div>
+
+        <div className="dashboard-card">
+          <div>
+            <h3>Present</h3>
+            <h2>{presentCount}</h2>
+          </div>
+
+          <span>🟢</span>
+        </div>
+
+        <div className="dashboard-card">
+          <div>
+            <h3>Absent</h3>
+            <h2>{absentCount}</h2>
+          </div>
+
+          <span>🔴</span>
+        </div>
+
+      </div>
+
+      {/* Results Statistics */}
+
+      <h2 className="dashboard-section-title">
+        Results Overview
+      </h2>
+
+      <div className="dashboard-cards">
+
+        <div className="dashboard-card">
+          <div>
+            <h3>Total Results</h3>
+            <h2>{totalResults}</h2>
+          </div>
+
+          <span>📝</span>
+        </div>
+
+        <div className="dashboard-card">
+          <div>
+            <h3>Passed</h3>
+            <h2>{passedResults}</h2>
+          </div>
+
+          <span>✅</span>
+        </div>
+
+        <div className="dashboard-card">
+          <div>
+            <h3>Failed</h3>
+            <h2>{failedResults}</h2>
+          </div>
+
+          <span>❌</span>
+        </div>
+
+      </div>
+
       {/* Recent Students */}
+
       <div className="recent-section">
 
         <div className="section-header">
+
           <div>
             <h2>Recent Students</h2>
-            <p>Recently added students</p>
+
+            <p>
+              Recently added students
+            </p>
           </div>
 
-          <Link to="/students">View All</Link>
+          <Link to="/students">
+            View All
+          </Link>
+
         </div>
 
         <div className="table-container">
+
           <table className="student-table">
 
             <thead>
@@ -115,6 +230,7 @@ const Dashboard = () => {
             </thead>
 
             <tbody>
+
               {recentStudents.length > 0 ? (
                 recentStudents.map((student) => (
                   <tr key={student.id}>
@@ -142,7 +258,9 @@ const Dashboard = () => {
                     </td>
 
                     <td>
-                      <Link to={`/students/${student.id}`}>
+                      <Link
+                        to={`/students/${student.id}`}
+                      >
                         <button
                           type="button"
                           className="primary-btn"
@@ -156,19 +274,26 @@ const Dashboard = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="6" style={{ textAlign: "center" }}>
+                  <td
+                    colSpan="6"
+                    style={{
+                      textAlign: "center",
+                    }}
+                  >
                     No students available
                   </td>
                 </tr>
               )}
+
             </tbody>
 
           </table>
+
         </div>
+
       </div>
     </div>
   );
 };
 
 export default Dashboard;
-

@@ -3,24 +3,27 @@ import { Link } from "react-router-dom";
 
 const NotFound = () => {
   return (
-    <div style={{ textAlign: "center", padding: "80px 20px" }}>
+    <div className="not-found-page">
+      <div className="not-found-card">
+        <div className="not-found-number">404</div>
 
-      <h1 style={{ fontSize: "80px", margin: "0" }}>
-        404
-      </h1>
+        <h1>Page Not Found</h1>
 
-      <h2>Page Not Found</h2>
+        <p>
+          Sorry, the page you are looking for does not exist
+          or may have been moved.
+        </p>
 
-      <p>
-        Sorry, the page you are looking for does not exist.
-      </p>
+        <div className="not-found-actions">
+          <Link to="/" className="primary-btn">
+            🏠 Go to Dashboard
+          </Link>
 
-      <Link to="/">
-        <button className="primary-btn">
-          ← Go to Dashboard
-        </button>
-      </Link>
-
+          <Link to="/students" className="secondary-btn">
+            👨‍🎓 View Students
+          </Link>
+        </div>
+      </div>
     </div>
   );
 };

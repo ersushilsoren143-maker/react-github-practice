@@ -11,6 +11,14 @@ import {
   deleteStudent,
 } from "../utils/studentStorage";
 
+import {
+  deleteAttendanceByStudentId,
+} from "../utils/attendanceStorage";
+
+import {
+  deleteResultsByStudentId,
+} from "../utils/resultStorage";
+
 const StudentContext = createContext();
 
 export const StudentProvider = ({ children }) => {
@@ -34,8 +42,16 @@ export const StudentProvider = ({ children }) => {
 
   // Delete student
   const removeStudent = (id) => {
+    // Delete student
     const updatedStudents = deleteStudent(id);
 
+    // Delete related attendance records
+    deleteAttendanceByStudentId(id);
+
+    // Delete related result records
+    deleteResultsByStudentId(id);
+
+    // Update students state
     setStudents(updatedStudents);
   };
 
